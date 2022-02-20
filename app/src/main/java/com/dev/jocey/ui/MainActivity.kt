@@ -7,14 +7,19 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import androidx.navigation.ui.NavigationUI.setupWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.dev.jocey.R
 import com.dev.jocey.databinding.ActivityMainBinding
-
+import com.dev.jocey.di.App
+import dagger.hilt.android.AndroidEntryPoint
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityMainBinding.inflate(layoutInflater)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         Log.d("mylog", "rem")
@@ -27,9 +32,13 @@ class MainActivity : AppCompatActivity() {
             navControler,
             appBarConfiguration
         )
-        setupWithNavController(binding.navBottom, navControler)
+        binding.navBottom.setupWithNavController(navControler)
 
 
     }
+//    override fun onSupportNavigateUp(): Boolean {
+//        val navController = findNavController(R.id.fragment_main)
+//        return navController.navigateUp() || super.onSupportNavigateUp()
+//    }
 
 }
