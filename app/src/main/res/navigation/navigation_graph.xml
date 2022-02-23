@@ -29,6 +29,8 @@
         android:name="com.dev.jocey.ui.detail.DetailFragment"
         android:label="Details"
         tools:layout="@layout/fragment_detail">
-
+        <argument
+            android:name="Deatail"
+            app:argType="com.dev.jocey.utils.entityes.CharacterPar" />
     </fragment>
 </navigation>

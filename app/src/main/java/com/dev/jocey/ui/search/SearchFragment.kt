@@ -1,19 +1,21 @@
 package com.dev.jocey.ui.search
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.dev.jocey.R
 import com.dev.jocey.databinding.FragmentSearchBinding
-import com.dev.jocey.model.network.CharacterEntity
 import com.dev.jocey.ui.BaseFragment
 import com.dev.jocey.utils.CharacterListAdapter
+import com.dev.jocey.utils.DetailClick
+import com.dev.jocey.utils.FavoritesClick
+import com.dev.jocey.utils.entityes.CharacterPar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 
@@ -28,7 +30,20 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
         viewModel.result.observe(
             viewLifecycleOwner
         ) {
-            binding.listSearch.adapter = CharacterListAdapter(it, requireContext())
+            binding.listSearch.adapter = CharacterListAdapter(it, object : FavoritesClick {
+                override fun clickOnFavorite(view: View) {
+
+                    view.setBackgroundResource(R.drawable.pic_favorite_empthy)
+                }
+            }, object : DetailClick {
+                override fun clickOnCharacter(character: CharacterPar) {
+                    findNavController().navigate(
+                        SearchFragmentDirections.actionSearchFragmentToDetailFragment(
+                            character
+                        )
+                    )
+                }
+            })
 
         }
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
