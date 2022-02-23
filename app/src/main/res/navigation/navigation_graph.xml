@@ -32,5 +32,8 @@
         <argument
             android:name="Deatail"
             app:argType="com.dev.jocey.utils.entityes.CharacterPar" />
+        <action
+            android:id="@+id/action_detailFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
 </navigation>

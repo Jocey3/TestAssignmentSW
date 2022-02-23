@@ -8,16 +8,16 @@ import android.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.dev.jocey.R
 import com.dev.jocey.databinding.FragmentSearchBinding
 import com.dev.jocey.ui.BaseFragment
-import com.dev.jocey.utils.CharacterListAdapter
-import com.dev.jocey.utils.DetailClick
-import com.dev.jocey.utils.FavoritesClick
+import com.dev.jocey.ui.search.util.DetailClick
+import com.dev.jocey.ui.search.util.FavoritesClick
+import com.dev.jocey.ui.search.util.SearchAdapter
+import com.dev.jocey.utils.InternetConnection
 import com.dev.jocey.utils.entityes.CharacterPar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Job
 
 @AndroidEntryPoint
 class SearchFragment : BaseFragment<FragmentSearchBinding>() {
@@ -25,15 +25,19 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
     private var job: Job? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.listSearch.layoutManager =
-            LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-        viewModel.result.observe(
-            viewLifecycleOwner
-        ) {
-            binding.listSearch.adapter = CharacterListAdapter(it, object : FavoritesClick {
-                override fun clickOnFavorite(view: View) {
-
-                    view.setBackgroundResource(R.drawable.pic_favorite_empthy)
+        binding.listSearch.layoutManager = LinearLayoutManager(requireContext())
+        viewModel.result.observe(viewLifecycleOwner) {
+            binding.listSearch.adapter = SearchAdapter(it, object : FavoritesClick {
+                override fun clickOnFavorite(view: View, character: CharacterPar) {
+                    if (character.favorite == 1) {
+                        view.setBackgroundResource(R.drawable.pic_favorite_empthy)
+                        character.favorite = 0
+                        viewModel.deleteFromFavorite(character.name)
+                    } else {
+                        view.setBackgroundResource(R.drawable.pic_favorite)
+                        character.favorite = 1
+                        viewModel.addToFavorite(character)
+                    }
                 }
             }, object : DetailClick {
                 override fun clickOnCharacter(character: CharacterPar) {
@@ -48,28 +52,25 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
         }
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(p0: String?): Boolean {
-                job?.cancel()
-                job = CoroutineScope(Dispatchers.IO).launch {
-                    if (p0 != "")
-                        viewModel.loadCharacters(p0 ?: "")
+                if (InternetConnection.isOnline(requireContext())) {
+                    p0?.let { viewModel.searchCharacters(it) }
                 }
                 return false
             }
 
             override fun onQueryTextChange(p0: String?): Boolean {
-                job?.cancel()
-                job = CoroutineScope(Dispatchers.IO).launch {
-                    delay(1000L)
-                    if (p0 != "")
-                        viewModel.loadCharacters(p0 ?: "")
-                    else {
-
-                    }
+                if (InternetConnection.isOnline(requireContext())) {
+                    p0?.let { viewModel.searchCharacters(it) }
                 }
                 return false
             }
         })
 
+    }
+
+    override fun onStop() {
+        job?.cancel()
+        super.onStop()
     }
 
     override fun initBinding(

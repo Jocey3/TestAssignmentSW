@@ -1,4 +1,4 @@
-package com.dev.jocey.ui.search
+package com.dev.jocey.ui.favorites
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,21 +10,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel @Inject constructor(
-    private val repository: Repository
-) :
-    ViewModel() {
-    val query = MutableLiveData<String>()
+class FavoritesViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
     val result = MutableLiveData<List<CharacterPar>>()
-
-
-    fun searchCharacters(name: String) {
+    fun getAllFavorites() {
         viewModelScope.launch {
-            result.value = repository.searchCharacters(name)
+            result.value = repository.getFavorites()
         }
-
     }
-
 
     fun addToFavorite(character: CharacterPar) {
         viewModelScope.launch {
@@ -37,4 +29,5 @@ class SearchViewModel @Inject constructor(
             repository.deleteFromDb(name)
         }
     }
+
 }

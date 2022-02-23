@@ -9,7 +9,7 @@
     <SearchView
         android:id="@+id/search_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="55dp"
         android:iconifiedByDefault="false"
         android:queryHint="Write character name" />
 

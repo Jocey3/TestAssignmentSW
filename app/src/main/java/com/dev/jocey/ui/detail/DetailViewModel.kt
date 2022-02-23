@@ -1,4 +1,4 @@
-package com.dev.jocey.ui.search
+package com.dev.jocey.ui.detail
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,31 +10,30 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel @Inject constructor(
-    private val repository: Repository
-) :
+class DetailViewModel @Inject constructor(private val repository: Repository) :
     ViewModel() {
-    val query = MutableLiveData<String>()
-    val result = MutableLiveData<List<CharacterPar>>()
 
-
-    fun searchCharacters(name: String) {
+    val films = MutableLiveData<List<String>>()
+    fun getFilmTitles(list: List<String?>) {
         viewModelScope.launch {
-            result.value = repository.searchCharacters(name)
-        }
-
-    }
-
-
-    fun addToFavorite(character: CharacterPar) {
-        viewModelScope.launch {
-            repository.addToDB(character)
+            films.value = repository.getFilms(list)
         }
     }
 
-    fun deleteFromFavorite(name: String) {
+    fun addToDB(deatail: CharacterPar) {
+        viewModelScope.launch {
+            repository.addToDB(deatail)
+        }
+    }
+
+    fun deleteFromDb(name: String) {
         viewModelScope.launch {
             repository.deleteFromDb(name)
         }
     }
+
+    fun updateCharacter(name: String) {
+
+    }
+
 }

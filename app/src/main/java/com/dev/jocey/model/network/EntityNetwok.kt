@@ -16,7 +16,7 @@ data class EntityNetwok(
     @SerializedName("birth_year") val birth_year: String?,
     @SerializedName("gender") val gender: String?,
     @SerializedName("homeworld") val homeworld: String?,
-    @SerializedName("films") val films: ArrayList<String>?,
+    @SerializedName("films") val filmsUrls: ArrayList<String>?,
     @SerializedName("species") val species: ArrayList<String>?,
     @SerializedName("vehicles") val vehicles: ArrayList<String>?,
     @SerializedName("starships") val starships: ArrayList<String>?,

@@ -1,4 +1,4 @@
-package com.dev.jocey.utils
+package com.dev.jocey.ui.search.util
 
 import com.dev.jocey.utils.entityes.CharacterPar
 
