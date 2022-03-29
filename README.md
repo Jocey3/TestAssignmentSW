@@ -1,4 +1,5 @@
 Terms of Reference
+
 Develop an Android application that interacts with StarWars API, performs search functions, and adds favorites to a list. API documentation: https://swapi.dev/documentation
 
 Functional requirements
